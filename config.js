@@ -18,6 +18,13 @@ window.MEMORIAL = {
   ],
 
   // Guestbook storage (Firebase / Firestore web config).
-  // Leave null until the project exists; the guestbook says "opening soon" until then.
-  firebase: null,
+  // Public by design: access is controlled by firestore.rules (deployed in the Firebase console).
+  firebase: {
+    apiKey: "AIzaSyCCEkovdfhKiKcC30BO-ZQMDt2d8lCel34",
+    authDomain: "mrs-babayomi-memorial.firebaseapp.com",
+    projectId: "mrs-babayomi-memorial",
+    storageBucket: "mrs-babayomi-memorial.firebasestorage.app",
+    messagingSenderId: "213717488008",
+    appId: "1:213717488008:web:4aa5a38ca68a2bf16eea3d",
+  },
 };

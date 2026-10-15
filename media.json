@@ -1,0 +1,55 @@
+{
+ "hero": "media/portrait-smile.jpg",
+ "items": [
+  {
+   "type": "video",
+   "src": "media/film-1.mp4",
+   "poster": "media/film-1.poster.jpg"
+  },
+  {
+   "type": "video",
+   "src": "media/film-2.mp4",
+   "poster": "media/film-2.poster.jpg"
+  },
+  {
+   "type": "image",
+   "src": "media/portrait-smile.jpg",
+   "wide": false
+  },
+  {
+   "type": "image",
+   "src": "media/portrait-seated.jpg",
+   "wide": false
+  },
+  {
+   "type": "image",
+   "src": "media/portrait-roses.jpg",
+   "wide": false
+  },
+  {
+   "type": "image",
+   "src": "media/eightieth-birthday.jpg",
+   "wide": true
+  },
+  {
+   "type": "image",
+   "src": "media/portrait-full.jpg",
+   "wide": false
+  },
+  {
+   "type": "image",
+   "src": "media/garden-purple.jpg",
+   "wide": false
+  },
+  {
+   "type": "image",
+   "src": "media/garden-purple-2.jpg",
+   "wide": false
+  },
+  {
+   "type": "image",
+   "src": "media/walking-purple.jpg",
+   "wide": false
+  }
+ ]
+}
