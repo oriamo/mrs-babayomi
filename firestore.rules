@@ -1,0 +1,21 @@
+rules_version = '2';
+// Anyone can read and add tributes; nobody can edit or delete them from the site.
+// Remove a message in the Firebase console → Firestore → tributes.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /tributes/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'relation', 'message', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
+        && request.resource.data.relation is string && request.resource.data.relation.size() <= 80
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 3000
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

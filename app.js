@@ -1,132 +1,160 @@
 const M = window.MEMORIAL;
 const $ = (id) => document.getElementById(id);
 
-// --- Header & story ---
-$("name").textContent = M.fullName;
-$("dates").textContent = `${M.born} – ${M.died}`;
-$("quote").textContent = M.quote ? `“${M.quote}”` : "";
-$("tribute").textContent = M.tribute;
-document.title = `In Loving Memory of ${M.knownAs || M.fullName}`;
+// ---------- Header ----------
+const fmt = (iso) =>
+  new Date(iso + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+const age = (() => {
+  const b = new Date(M.born + "T12:00:00"), d = new Date(M.died + "T12:00:00");
+  let a = d.getFullYear() - b.getFullYear();
+  if (d < new Date(d.getFullYear(), b.getMonth(), b.getDate())) a--;
+  return a;
+})();
+$("title").textContent = M.title;
+$("first-names").textContent = M.firstNames;
+$("surname").textContent = M.surname;
+$("born-label").textContent = fmt(M.born);
+$("died-label").textContent = fmt(M.died);
+$("age").textContent = `${age} years`;
+$("verse-text").textContent = `“${M.verse}”`;
+$("verse-ref").textContent = M.verseRef;
+$("story").replaceChildren(...M.story.map((t) => Object.assign(document.createElement("p"), { textContent: t })));
 
-// --- Gallery (media.json is written by build-media.sh) ---
+// ---------- Reveal on scroll ----------
+const io = new IntersectionObserver(
+  (entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add("in"), io.unobserve(e.target))),
+  { threshold: 0.12 }
+);
+const observe = (root = document) => root.querySelectorAll(".reveal:not(.in)").forEach((el) => io.observe(el));
+observe();
+
+// ---------- Media (media.json is written by build-media.sh) ----------
 let media = [];
-fetch("media.json")
-  .then((r) => (r.ok ? r.json() : { hero: null, items: [] }))
-  .catch(() => ({ hero: null, items: [] }))
-  .then(({ hero, items }) => {
-    media = items;
-    if (hero) {
-      $("hero-photo").src = hero;
-      $("hero-photo").hidden = false;
-    }
-    $("gallery-empty").hidden = items.length > 0;
-    items.forEach((item, i) => {
-      const fig = document.createElement("figure");
-      if (item.type === "video") {
-        const v = document.createElement("video");
-        v.src = item.src + "#t=0.5"; // first frame as thumbnail
-        v.preload = "metadata";
-        v.muted = true;
-        v.playsInline = true;
-        fig.append(v);
-        const play = document.createElement("div");
-        play.className = "play";
-        play.textContent = "▶";
-        fig.append(play);
-      } else {
-        const img = document.createElement("img");
-        img.src = item.src;
-        img.loading = "lazy";
-        img.alt = "";
-        fig.append(img);
-      }
-      fig.onclick = () => openLightbox(i);
-      $("gallery").append(fig);
-    });
-  });
+const { hero, items } = await fetch("media.json")
+  .then((r) => (r.ok ? r.json() : {}))
+  .catch(() => ({}))
+  .then((j) => ({ hero: j.hero ?? null, items: j.items ?? [] }));
 
-// --- Lightbox ---
+media = [...items.filter((i) => i.type === "video"), ...items.filter((i) => i.type === "image")];
+if (hero) $("hero-photo").src = hero;
+$("gallery-empty").hidden = media.length > 0;
+
+media.forEach((item, i) => {
+  if (item.type === "video") {
+    const fig = document.createElement("figure");
+    fig.className = "film reveal";
+    if (item.poster) fig.append(Object.assign(document.createElement("img"), { src: item.poster, alt: "", loading: "lazy" }));
+    fig.append(Object.assign(document.createElement("span"), { className: "play" }));
+    fig.append(Object.assign(document.createElement("figcaption"), { textContent: "Watch" }));
+    fig.onclick = () => openLightbox(i);
+    $("films").append(fig);
+  } else {
+    const fig = document.createElement("figure");
+    fig.className = `photo reveal${item.wide ? " wide" : ""}`;
+    fig.append(Object.assign(document.createElement("img"), { src: item.src, alt: "", loading: "lazy", decoding: "async" }));
+    fig.onclick = () => openLightbox(i);
+    $("gallery").append(fig);
+  }
+});
+observe();
+
+// ---------- Lightbox ----------
 let current = 0;
 function openLightbox(i) {
   current = (i + media.length) % media.length;
   const item = media[current];
   const el = document.createElement(item.type === "video" ? "video" : "img");
   el.src = item.src;
-  if (item.type === "video") {
-    el.controls = true;
-    el.autoplay = true;
-    el.playsInline = true;
-  }
+  if (item.type === "video") Object.assign(el, { controls: true, autoplay: true, playsInline: true, poster: item.poster || "" });
   $("lb-content").replaceChildren(el);
+  $("lb-count").textContent = `${current + 1} / ${media.length}`;
   $("lightbox").hidden = false;
+  document.body.style.overflow = "hidden";
 }
 function closeLightbox() {
   $("lightbox").hidden = true;
   $("lb-content").replaceChildren();
+  document.body.style.overflow = "";
 }
 document.querySelector(".lb-close").onclick = closeLightbox;
 document.querySelector(".lb-prev").onclick = () => openLightbox(current - 1);
 document.querySelector(".lb-next").onclick = () => openLightbox(current + 1);
-$("lightbox").onclick = (e) => { if (e.target.id === "lightbox") closeLightbox(); };
+$("lightbox").onclick = (e) => e.target.id === "lightbox" && closeLightbox();
 document.addEventListener("keydown", (e) => {
   if ($("lightbox").hidden) return;
   if (e.key === "Escape") closeLightbox();
   if (e.key === "ArrowLeft") openLightbox(current - 1);
   if (e.key === "ArrowRight") openLightbox(current + 1);
 });
+let touchX = null;
+$("lightbox").addEventListener("touchstart", (e) => (touchX = e.touches[0].clientX), { passive: true });
+$("lightbox").addEventListener("touchend", (e) => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) openLightbox(current + (dx < 0 ? 1 : -1));
+  touchX = null;
+});
 
-// --- Guestbook (Supabase REST, table "tributes") ---
-const gbReady = M.supabaseUrl && M.supabaseAnonKey;
-const api = `${M.supabaseUrl}/rest/v1/tributes`;
-const headers = {
-  apikey: M.supabaseAnonKey,
-  Authorization: `Bearer ${M.supabaseAnonKey}`,
-  "Content-Type": "application/json",
-};
-
-function renderEntry({ name, relation, message, created_at }) {
-  const div = document.createElement("div");
-  div.className = "entry";
-  const p = document.createElement("p");
-  p.textContent = message;
-  const who = document.createElement("p");
-  who.className = "who";
-  const date = new Date(created_at).toLocaleDateString(undefined, { dateStyle: "long" });
-  who.textContent = `— ${name}${relation ? `, ${relation}` : ""} · ${date}`;
-  div.append(p, who);
+// ---------- Guestbook (Firestore collection "tributes") ----------
+function renderEntry({ name, relation, message, createdAt }, i) {
+  const div = document.createElement("article");
+  div.className = "entry reveal";
+  const flame = document.createElement("div");
+  flame.className = "flame";
+  flame.style.setProperty("--d", `${(i % 7) * -0.4}s`);
+  flame.append(document.createElement("span"));
+  const p = Object.assign(document.createElement("p"), { textContent: message });
+  const who = Object.assign(document.createElement("p"), { className: "who", textContent: name });
+  const meta = [relation, createdAt?.toDate?.().toLocaleDateString("en-GB", { dateStyle: "long" })].filter(Boolean).join(" · ");
+  if (meta) who.append(Object.assign(document.createElement("small"), { textContent: meta }));
+  div.append(flame, p, who);
   return div;
 }
-
-async function loadEntries() {
-  const r = await fetch(`${api}?select=name,relation,message,created_at&order=created_at.desc`, { headers });
-  if (!r.ok) throw new Error(r.status);
-  $("gb-list").replaceChildren(...(await r.json()).map(renderEntry));
+function setCount(n) {
+  $("count").textContent = n;
+  $("count-label").textContent = n === 1 ? "candle lit in her memory" : "candles lit in her memory";
 }
 
-if (!gbReady) {
-  $("gb-form").querySelector("button").disabled = true;
-  $("gb-status").textContent = "The guestbook is being set up — please check back soon.";
+const form = $("gb-form");
+if (!M.firebase) {
+  form.querySelector("button").disabled = true;
+  $("gb-status").textContent = "The book of remembrance opens very soon.";
 } else {
-  loadEntries().catch(() => ($("gb-status").textContent = "Couldn't load messages. Please refresh."));
-  $("gb-form").onsubmit = async (e) => {
+  const V = "11.10.0";
+  const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+  const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
+  const db = fs.getFirestore(initializeApp(M.firebase));
+  const col = fs.collection(db, "tributes");
+
+  // Live list: new candles appear for everyone without a refresh
+  fs.onSnapshot(
+    fs.query(col, fs.orderBy("createdAt", "desc")),
+    (snap) => {
+      setCount(snap.size);
+      $("gb-list").replaceChildren(...snap.docs.map((d, i) => renderEntry(d.data(), i)));
+      observe($("gb-list"));
+    },
+    () => ($("gb-status").textContent = "Couldn't load the messages. Please refresh.")
+  );
+
+  form.onsubmit = async (e) => {
     e.preventDefault();
-    const btn = e.target.querySelector("button");
+    const btn = form.querySelector("button");
     const entry = {
       name: $("gb-name").value.trim(),
-      relation: $("gb-relation").value.trim() || null,
+      relation: $("gb-relation").value.trim(),
       message: $("gb-message").value.trim(),
+      createdAt: fs.serverTimestamp(),
     };
     if (!entry.name || !entry.message) return;
     btn.disabled = true;
-    $("gb-status").textContent = "Sending…";
+    $("gb-status").textContent = "Lighting your candle…";
     try {
-      const r = await fetch(api, { method: "POST", headers, body: JSON.stringify(entry) });
-      if (!r.ok) throw new Error(r.status);
-      e.target.reset();
-      $("gb-status").textContent = "Thank you. Your words have been added.";
-      await loadEntries();
+      await fs.addDoc(col, entry);
+      form.reset();
+      $("gb-status").textContent = "Thank you. Your candle is lit.";
     } catch {
-      $("gb-status").textContent = "Sorry, that didn't send. Please try again.";
+      $("gb-status").textContent = "Sorry, that didn't go through. Please try again.";
     } finally {
       btn.disabled = false;
     }

@@ -2,59 +2,116 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <!-- Unlisted: keep search engines out -->
   <meta name="robots" content="noindex, nofollow, noarchive" />
-  <title>In Loving Memory</title>
+  <title>Deaconess Florence Yewande Babayomi · 1945 – 2026</title>
+  <meta property="og:title" content="Deaconess Florence Yewande Babayomi · 1945 – 2026" />
+  <meta property="og:description" content="Celebrating a life of faith and love. Share a memory or light a candle." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- ============ HERO ============ -->
   <header class="hero">
-    <img id="hero-photo" class="hero-photo" alt="" hidden />
-    <p class="eyebrow">In loving memory of</p>
-    <h1 id="name"></h1>
-    <p id="dates" class="dates"></p>
-    <blockquote id="quote"></blockquote>
+    <div class="hero-adire" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <p class="kicker reveal">A celebration of life</p>
+
+      <div class="arch reveal">
+        <img id="hero-photo" alt="Deaconess Florence Yewande Babayomi" />
+      </div>
+
+      <h1 class="reveal">
+        <span id="title" class="h-title"></span>
+        <span id="first-names" class="h-first"></span>
+        <span id="surname" class="h-surname"></span>
+      </h1>
+
+      <div class="dates reveal">
+        <span id="born-label"></span>
+        <span class="dates-rule" aria-hidden="true"><i></i><b id="age"></b><i></i></span>
+        <span id="died-label"></span>
+      </div>
+    </div>
+    <a href="#verse" class="scroll-cue" aria-label="Scroll down"><span></span></a>
   </header>
 
-  <main>
-    <section class="tribute">
+  <!-- ============ VERSE ============ -->
+  <section id="verse" class="verse">
+    <svg class="cross" viewBox="0 0 24 40" aria-hidden="true"><path d="M10 0h4v11h10v4H14v25h-4V15H0v-4h10z"/></svg>
+    <blockquote class="reveal">
+      <p id="verse-text"></p>
+      <cite id="verse-ref"></cite>
+    </blockquote>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <section class="story">
+    <div class="section-head reveal">
+      <span class="num">I</span>
       <h2>Her Story</h2>
-      <p id="tribute"></p>
-    </section>
+    </div>
+    <div id="story" class="story-body reveal"></div>
+  </section>
 
-    <section>
+  <!-- ============ GALLERY ============ -->
+  <section class="memories">
+    <div class="section-head reveal">
+      <span class="num">II</span>
       <h2>Memories</h2>
-      <div id="gallery" class="gallery"></div>
-      <p id="gallery-empty" class="muted" hidden>Photos and videos coming soon.</p>
-    </section>
+    </div>
+    <div id="films" class="films"></div>
+    <div id="gallery" class="gallery"></div>
+    <p id="gallery-empty" class="empty" hidden>Photographs are on their way.</p>
+  </section>
 
-    <section class="guestbook">
-      <h2>Words of Love</h2>
-      <p class="muted">Share a memory, a prayer, or a few kind words.</p>
-      <form id="gb-form">
-        <input id="gb-name" maxlength="80" placeholder="Your name" required />
-        <input id="gb-relation" maxlength="80" placeholder="How you knew her (optional)" />
-        <textarea id="gb-message" maxlength="3000" rows="5" placeholder="Your message" required></textarea>
-        <button type="submit">Leave a tribute</button>
-        <p id="gb-status" class="muted" role="status"></p>
-      </form>
-      <div id="gb-list"></div>
-    </section>
-  </main>
+  <!-- ============ CANDLES / GUESTBOOK ============ -->
+  <section class="candles" id="candles">
+    <div class="adire-band" aria-hidden="true"></div>
+    <div class="section-head light reveal">
+      <span class="num">III</span>
+      <h2>Light a Candle</h2>
+    </div>
+    <p class="candle-count reveal"><span id="count">0</span> <span id="count-label">candles lit in her memory</span></p>
 
-  <footer>Forever loved · Forever missed</footer>
+    <form id="gb-form" class="gb-form reveal" autocomplete="on">
+      <div class="flame-big" aria-hidden="true"><span></span></div>
+      <label>Your name
+        <input id="gb-name" name="name" maxlength="80" required />
+      </label>
+      <label>How you knew her <em>(optional)</em>
+        <input id="gb-relation" name="relation" maxlength="80" placeholder="Grandchild, church member, neighbour…" />
+      </label>
+      <label>Your words
+        <textarea id="gb-message" name="message" maxlength="3000" rows="5" required
+          placeholder="A memory, a prayer, or simply thank you."></textarea>
+      </label>
+      <button type="submit">Light a candle</button>
+      <p id="gb-status" class="gb-status" role="status"></p>
+    </form>
 
+    <div id="gb-list" class="gb-list"></div>
+  </section>
+
+  <footer>
+    <p class="yoruba">Sùn re o, Mama.</p>
+    <p class="translation">Rest well, Mama.</p>
+    <p class="small">Forever loved · Forever missed</p>
+  </footer>
+
+  <!-- ============ LIGHTBOX ============ -->
   <div id="lightbox" class="lightbox" hidden>
-    <button class="lb-close" aria-label="Close">×</button>
-    <button class="lb-prev" aria-label="Previous">‹</button>
+    <button class="lb-close" aria-label="Close">Close</button>
+    <button class="lb-prev" aria-label="Previous">←</button>
     <div id="lb-content"></div>
-    <button class="lb-next" aria-label="Next">›</button>
+    <button class="lb-next" aria-label="Next">→</button>
+    <p id="lb-count" class="lb-count"></p>
   </div>
 
   <script src="config.js"></script>
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
