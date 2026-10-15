@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Unlisted: keep search engines out -->
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>In Loving Memory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <img id="hero-photo" class="hero-photo" alt="" hidden />
+    <p class="eyebrow">In loving memory of</p>
+    <h1 id="name"></h1>
+    <p id="dates" class="dates"></p>
+    <blockquote id="quote"></blockquote>
+  </header>
+
+  <main>
+    <section class="tribute">
+      <h2>Her Story</h2>
+      <p id="tribute"></p>
+    </section>
+
+    <section>
+      <h2>Memories</h2>
+      <div id="gallery" class="gallery"></div>
+      <p id="gallery-empty" class="muted" hidden>Photos and videos coming soon.</p>
+    </section>
+
+    <section class="guestbook">
+      <h2>Words of Love</h2>
+      <p class="muted">Share a memory, a prayer, or a few kind words.</p>
+      <form id="gb-form">
+        <input id="gb-name" maxlength="80" placeholder="Your name" required />
+        <input id="gb-relation" maxlength="80" placeholder="How you knew her (optional)" />
+        <textarea id="gb-message" maxlength="3000" rows="5" placeholder="Your message" required></textarea>
+        <button type="submit">Leave a tribute</button>
+        <p id="gb-status" class="muted" role="status"></p>
+      </form>
+      <div id="gb-list"></div>
+    </section>
+  </main>
+
+  <footer>Forever loved · Forever missed</footer>
+
+  <div id="lightbox" class="lightbox" hidden>
+    <button class="lb-close" aria-label="Close">×</button>
+    <button class="lb-prev" aria-label="Previous">‹</button>
+    <div id="lb-content"></div>
+    <button class="lb-next" aria-label="Next">›</button>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
