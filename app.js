@@ -16,8 +16,15 @@ $("surname").textContent = M.surname;
 $("born-label").textContent = fmt(M.born);
 $("died-label").textContent = fmt(M.died);
 $("age").textContent = `${age} years`;
-$("verse-text").textContent = `“${M.verse}”`;
-$("verse-ref").textContent = M.verseRef;
+const verses = M.verses ?? (M.verse ? [{ text: M.verse, ref: M.verseRef }] : []);
+$("verses").replaceChildren(
+  ...verses.map(({ text, ref }) => {
+    const q = Object.assign(document.createElement("blockquote"), { className: "reveal" });
+    q.append(Object.assign(document.createElement("p"), { textContent: `“${text}”` }));
+    if (ref) q.append(Object.assign(document.createElement("cite"), { textContent: ref }));
+    return q;
+  })
+);
 $("story").replaceChildren(...M.story.map((t) => Object.assign(document.createElement("p"), { textContent: t })));
 
 // ---------- Reveal on scroll ----------

@@ -6,15 +6,19 @@ window.MEMORIAL = {
   born: "1945-02-24",
   died: "2026-10-06",
 
-  verse: "I have fought a good fight, I have finished my course, I have kept the faith.",
-  verseRef: "2 Timothy 4:7",
+  // Bible verses she held dear (shown under the hero). Add or remove freely.
+  verses: [
+    { text: "Those that put their trust in the Lord shall not be put to shame.", ref: "" },
+    { text: "I will lift up my eyes unto the Lord; where will my help come from?", ref: "" },
+  ],
 
-  // Paragraphs of her story. Add, remove or rewrite freely.
+  // Paragraphs of her story, in the family's own words.
   story: [
-    "Write about who she was here — where she was born, the family she raised, " +
-      "the church she served as a deaconess, and the things everyone remembers her for.",
-    "A second paragraph for the little things: her cooking, her laugh, her prayers, " +
-      "the advice she always gave.",
+    "Mrs Babayomi is passionate about biblical tenets and as much as possible will always say be at peace " +
+      "with each other be it among friends or family or neighbour's so she always advocate peace by saying " +
+      "her mind that Jesus may come any time.",
+    "She also loves to praise God no matter what and when she is extremely happy she rolls on the floor " +
+      "and will keep singing.",
   ],
 
   // Guestbook storage (Firebase / Firestore web config).
