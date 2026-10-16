@@ -1,6 +1,6 @@
 rules_version = '2';
-// Anyone can read and add tributes; nobody can edit or delete them from the site.
-// Remove a message in the Firebase console → Firestore → tributes.
+// Anyone can read and add tributes and photos; nobody can edit or delete them from the site.
+// Remove a message or photo in the Firebase console → Firestore → tributes / photos (+ photoFull).
 service cloud.firestore {
   match /databases/{database}/documents {
     match /tributes/{id} {
@@ -12,6 +12,31 @@ service cloud.firestore {
         && request.resource.data.message is string
         && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 3000
         && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+    // Photos shared by visitors: a small version (shown in the gallery) and a full
+    // version (opened in the lightbox), always written together in one batch.
+    match /photos/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'caption', 'thumb', 'wide', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
+        && request.resource.data.caption is string
+        && request.resource.data.caption.size() > 0 && request.resource.data.caption.size() <= 300
+        && request.resource.data.thumb is string && request.resource.data.thumb.size() <= 150000
+        && request.resource.data.thumb.split(',')[0] == 'data:image/jpeg;base64'
+        && request.resource.data.wide is bool
+        && request.resource.data.createdAt == request.time
+        && existsAfter(/databases/$(database)/documents/photoFull/$(id));
+      allow update, delete: if false;
+    }
+    match /photoFull/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['full', 'createdAt'])
+        && request.resource.data.full is string && request.resource.data.full.size() <= 950000
+        && request.resource.data.full.split(',')[0] == 'data:image/jpeg;base64'
+        && request.resource.data.createdAt == request.time
+        && existsAfter(/databases/$(database)/documents/photos/$(id));
       allow update, delete: if false;
     }
     match /{document=**} {

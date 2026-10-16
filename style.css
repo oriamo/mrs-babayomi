@@ -193,6 +193,71 @@ h1 { margin: 0; font-weight: 400; }
 }
 .empty { text-align: center; font: italic 1.3rem var(--serif); color: var(--ink-soft); }
 
+/* shared photos carry a handwritten-style caption under the print */
+.photo.shared figcaption { padding: .8rem .3rem .2rem; }
+.photo .cap { display: block; font: italic 400 1.08rem/1.35 var(--serif); color: var(--ink); white-space: pre-line;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.photo .by { display: block; margin-top: .45rem; font: 500 .62rem/1.3 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--indigo-500); }
+
+/* ---------- SHARE A PHOTO ---------- */
+.share-form {
+  max-width: 1100px; margin: 5rem auto 0;
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--paper);
+  border: 1px solid rgba(201,163,91,.45);
+  box-shadow: 0 1px 2px rgba(29,27,34,.05), 0 24px 50px -30px rgba(29,27,34,.35);
+  position: relative;
+}
+.share-form::before { /* thin inner gold rule, like a mount */
+  content: ""; position: absolute; inset: 8px; border: 1px solid rgba(201,163,91,.2); pointer-events: none;
+}
+.share-head { grid-column: 1 / -1; text-align: center; }
+.share-head h3 { margin: 0; font: 400 clamp(1.7rem, 4vw, 2.3rem)/1.1 var(--display); color: var(--indigo-900); }
+.share-head p { margin: .7rem auto 0; max-width: 46ch; color: var(--ink-soft); }
+.drop {
+  position: relative; display: grid; place-items: center; text-align: center; cursor: pointer;
+  aspect-ratio: 4 / 5; border: 1.5px dashed rgba(74,84,143,.45); background: var(--cream);
+  transition: border-color .3s, background .3s; overflow: hidden;
+}
+.drop:hover, .drop:focus-within { border-color: var(--gold); background: #efe5d3; }
+.drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.drop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.drop-hint { display: grid; gap: .4rem; padding: 1rem; pointer-events: none; }
+.drop-hint::before { content: "+"; font: 300 2.6rem/1 var(--display); color: var(--gold); }
+.drop-hint b { font: 500 .75rem/1 var(--sans); letter-spacing: .28em; text-transform: uppercase; color: var(--indigo-700); }
+.drop-hint small { font-size: .82rem; color: var(--ink-soft); }
+.drop.has-photo .drop-hint { display: none; }
+.drop.has-photo::after {
+  content: "Change photo"; position: absolute; left: 50%; bottom: .9rem; translate: -50% 0; pointer-events: none;
+  font: 500 .62rem/1 var(--sans); letter-spacing: .25em; text-transform: uppercase;
+  color: var(--cream); background: rgba(18,21,43,.7); padding: .6rem .9rem; border-radius: 999px;
+}
+.share-fields { display: grid; gap: 1.4rem; align-content: center; min-height: 100%; }
+.share-fields label { display: grid; gap: .45rem; font: 500 .7rem/1 var(--sans); letter-spacing: .24em; text-transform: uppercase; color: var(--indigo-700); }
+.share-fields input, .share-fields textarea {
+  font: 300 1.05rem/1.6 var(--sans); color: var(--ink); background: transparent;
+  border: 0; border-bottom: 1px solid rgba(29,27,34,.25); padding: .5rem 0; outline: none; resize: vertical;
+  letter-spacing: 0; text-transform: none; transition: border-color .3s;
+}
+.share-fields input:focus, .share-fields textarea:focus { border-color: var(--gold); }
+.share-fields textarea::placeholder { color: rgba(29,27,34,.35); }
+.share-fields button {
+  justify-self: start; margin-top: .4rem;
+  font: 500 .75rem/1 var(--sans); letter-spacing: .3em; text-transform: uppercase;
+  color: var(--cream); background: var(--indigo-800); border: 0; border-radius: 999px;
+  padding: 1.1rem 2.2rem; cursor: pointer; transition: background .3s, transform .3s;
+}
+.share-fields button:hover { background: var(--indigo-700); transform: translateY(-1px); }
+.share-fields button:disabled { opacity: .45; cursor: default; transform: none; }
+.share-status { margin: 0; min-height: 1.5em; font: italic 1.1rem var(--serif); color: var(--indigo-700); }
+@media (max-width: 760px) {
+  .share-form { grid-template-columns: 1fr; margin-top: 3.5rem; }
+  .drop { aspect-ratio: 4 / 3; }
+  .share-fields button { justify-self: stretch; }
+}
+
 /* ---------- CANDLES ---------- */
 .candles {
   position: relative;
@@ -207,8 +272,7 @@ h1 { margin: 0; font-weight: 400; }
   pointer-events: none;
 }
 .candles > * { position: relative; }
-.candle-count { text-align: center; margin: -1.5rem 0 3.5rem; color: var(--gold-soft); font: italic 1.25rem var(--serif); }
-.candle-count #count { font: 400 1.6rem var(--display); color: var(--cream); }
+.candle-intro { text-align: center; max-width: 30ch; margin: -1.5rem auto 3.5rem; color: var(--gold-soft); font: italic clamp(1.25rem, 3vw, 1.5rem)/1.4 var(--serif); }
 
 .gb-form {
   max-width: 560px; margin: 0 auto 5rem; display: grid; gap: 1.4rem;
@@ -283,4 +347,11 @@ footer .small { font: 500 .68rem/1 var(--sans); letter-spacing: .32em; text-tran
 .lb-close { top: .75rem; right: 1rem; font-size: .72rem !important; letter-spacing: .3em; text-transform: uppercase; }
 .lb-prev { left: .5rem; top: 50%; translate: 0 -50%; }
 .lb-next { right: .5rem; top: 50%; translate: 0 -50%; }
+.lb-caption {
+  position: absolute; left: 50%; bottom: 2.6rem; translate: -50% 0; width: min(640px, 90vw); margin: 0;
+  text-align: center; color: var(--cream); font: italic 1.15rem/1.4 var(--serif);
+}
+.lb-caption small { display: block; margin-top: .3rem; font: 500 .62rem/1.3 var(--sans); letter-spacing: .22em; text-transform: uppercase; font-style: normal; color: var(--gold-soft); }
+.lightbox.has-caption #lb-content { margin-bottom: 6.5rem; }
+.lightbox.has-caption #lb-content img { max-height: 70svh; }
 .lb-count { position: absolute; bottom: 1rem; margin: 0; font: 500 .7rem var(--sans); letter-spacing: .3em; color: rgba(243,236,224,.55); }

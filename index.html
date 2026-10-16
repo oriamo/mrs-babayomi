@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
   <!-- ============ HERO ============ -->
@@ -63,6 +63,30 @@
     <div id="films" class="films"></div>
     <div id="gallery" class="gallery"></div>
     <p id="gallery-empty" class="empty" hidden>Photographs are on their way.</p>
+
+    <!-- Visitors add their own photographs; they appear in the gallery above -->
+    <form id="share-form" class="share-form reveal" autocomplete="on">
+      <div class="share-head">
+        <h3>Share a photograph of her</h3>
+        <p>Add a favourite picture of Mrs Babayomi and tell us about it. It will appear in the gallery above for everyone to see.</p>
+      </div>
+      <label class="drop" id="share-drop">
+        <input type="file" id="share-file" accept="image/*" required />
+        <img id="share-preview" alt="" hidden />
+        <span class="drop-hint"><b>Choose a photo</b><small>JPEG or PNG · from your phone or computer</small></span>
+      </label>
+      <div class="share-fields">
+        <label>Your name
+          <input id="share-name" name="name" maxlength="80" required />
+        </label>
+        <label>About this photo
+          <textarea id="share-caption" name="caption" maxlength="300" rows="3" required
+            placeholder="When and where was this? What do you remember?"></textarea>
+        </label>
+        <button type="submit">Add to the gallery</button>
+        <p id="share-status" class="share-status" role="status"></p>
+      </div>
+    </form>
   </section>
 
   <!-- ============ CANDLES / GUESTBOOK ============ -->
@@ -72,7 +96,7 @@
       <span class="num">III</span>
       <h2>Light a Candle</h2>
     </div>
-    <p class="candle-count reveal"><span id="count">0</span> <span id="count-label">candles lit in her memory</span></p>
+    <p class="candle-intro reveal">Light a candle by saying some words about Mrs Babayomi.</p>
 
     <form id="gb-form" class="gb-form reveal" autocomplete="on">
       <div class="flame-big" aria-hidden="true"><span></span></div>
@@ -105,10 +129,11 @@
     <button class="lb-prev" aria-label="Previous">←</button>
     <div id="lb-content"></div>
     <button class="lb-next" aria-label="Next">→</button>
+    <p id="lb-caption" class="lb-caption" hidden></p>
     <p id="lb-count" class="lb-count"></p>
   </div>
 
-  <script src="config.js?v=2"></script>
-  <script type="module" src="app.js?v=2"></script>
+  <script src="config.js?v=3"></script>
+  <script type="module" src="app.js?v=3"></script>
 </body>
 </html>
