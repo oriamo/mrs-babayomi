@@ -173,10 +173,10 @@ h1 { margin: 0; font-weight: 400; }
 .memories { padding: 3rem clamp(1rem, 4vw, 3rem) 7rem; background: var(--cream); }
 .films { display: grid; gap: 1.5rem; max-width: 1100px; margin: 0 auto 1.5rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
 .film {
-  position: relative; cursor: pointer; overflow: hidden; border-radius: 4px;
+  position: relative; cursor: pointer; overflow: hidden; border-radius: 4px; margin: 0;
   background: var(--indigo-900); aspect-ratio: 16 / 10;
 }
-.film img { width: 100%; height: 100%; object-fit: cover; opacity: .82; transition: transform 1.2s ease, opacity .6s; }
+.film img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; opacity: .82; transition: transform 1.2s ease, opacity .6s; }
 .film:hover img { transform: scale(1.04); opacity: .95; }
 .film .play {
   position: absolute; inset: 0; margin: auto; width: 74px; height: 74px; border-radius: 50%;
@@ -361,7 +361,7 @@ footer { background: var(--indigo-900); color: var(--cream); text-align: center;
 footer .small { font: 500 .68rem/1 var(--sans); letter-spacing: .32em; text-transform: uppercase; color: rgba(243,236,224,.45); }
 
 /* ---------- LIGHTBOX ---------- */
-.lightbox { position: fixed; inset: 0; z-index: 20; background: rgba(12,14,30,.96); display: grid; place-items: center; }
+.lightbox { position: fixed; inset: 0; z-index: 20; background: rgba(12,14,30,.985); display: grid; place-items: center; }
 .lightbox[hidden] { display: none; }
 #lb-content img, #lb-content video { max-width: 90vw; max-height: 84svh; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
 .lightbox button { position: absolute; background: none; border: 0; color: var(--cream); cursor: pointer; font: 400 1.6rem var(--sans); padding: 1rem; opacity: .75; }

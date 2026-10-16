@@ -61,6 +61,7 @@ films.forEach((item, i) => {
   fig.onclick = () => openLightbox(i);
   $("films").append(fig);
 });
+observe($("films"));
 
 function renderGallery() {
   media = [...films, ...familyPhotos, ...shared];
