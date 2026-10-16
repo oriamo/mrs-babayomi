@@ -8,7 +8,7 @@ service cloud.firestore {
       allow create: if request.resource.data.keys().hasOnly(['name', 'relation', 'message', 'createdAt'])
         && request.resource.data.name is string
         && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
-        && request.resource.data.relation is string && request.resource.data.relation.size() <= 80
+        && request.resource.data.relation is string && request.resource.data.relation.size() <= 300
         && request.resource.data.message is string
         && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 3000
         && request.resource.data.createdAt == request.time;

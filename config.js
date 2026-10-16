@@ -21,6 +21,15 @@ window.MEMORIAL = {
       "and will keep singing.",
   ],
 
+  // Moderation: entries listed here are hidden from the site (nothing is deleted).
+  // Use the document ID from the Firebase console (Firestore → photos / tributes).
+  hidden: {
+    photos: [
+      "WHT6oXBucwrACci8hRcY", // Mrs Oyelowo's photo (eating) — hidden at the family's request, 16 Oct 2026
+    ],
+    tributes: [],
+  },
+
   // Guestbook storage (Firebase / Firestore web config).
   // Public by design: access is controlled by firestore.rules (deployed in the Firebase console).
   firebase: {

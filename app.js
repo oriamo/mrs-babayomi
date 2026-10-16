@@ -98,9 +98,12 @@ function openLightbox(i) {
   cap.hidden = !item.by;
   $("lightbox").classList.toggle("has-caption", !!item.by);
   if (item.by) cap.replaceChildren(item.caption, el("small", { textContent: `Shared by ${item.by}` }));
+  cap.scrollTop = 0;
   $("lb-count").textContent = `${current + 1} / ${media.length}`;
   $("lightbox").hidden = false;
   document.body.style.overflow = "hidden";
+  // long descriptions scroll; fade the bottom edge so it's clear there's more
+  cap.classList.toggle("scrolls", !cap.hidden && cap.scrollHeight > cap.clientHeight + 2);
 }
 function closeLightbox() {
   $("lightbox").hidden = true;
@@ -161,11 +164,16 @@ $("share-file").onchange = () => {
 };
 
 // ---------- Guestbook + shared photos (Firestore) ----------
+const hidden = { photos: new Set(M.hidden?.photos ?? []), tributes: new Set(M.hidden?.tributes ?? []) };
+
 function renderEntry({ name, relation, message, createdAt }, i) {
   const flame = el("div", { className: "flame" }, el("span"));
   flame.style.setProperty("--d", `${(i % 7) * -0.4}s`);
-  const meta = [relation, createdAt?.toDate?.().toLocaleDateString("en-GB", { dateStyle: "long" })].filter(Boolean).join(" · ");
-  const who = el("p", { className: "who", textContent: name }, meta && el("small", { textContent: meta }));
+  const date = createdAt?.toDate?.().toLocaleDateString("en-GB", { dateStyle: "long" });
+  const who = el("div", { className: "who" },
+    el("span", { className: "who-name", textContent: name }),
+    relation && el("span", { className: "who-rel", textContent: relation }),
+    date && el("span", { className: "who-date", textContent: date }));
   return el("article", { className: "entry reveal" }, flame, el("p", { textContent: message }), who);
 }
 
@@ -186,7 +194,8 @@ if (!M.firebase) {
   fs.onSnapshot(
     fs.query(col, fs.orderBy("createdAt", "desc")),
     (snap) => {
-      $("gb-list").replaceChildren(...snap.docs.map((d, i) => renderEntry(d.data(), i)));
+      const docs = snap.docs.filter((d) => !hidden.tributes.has(d.id));
+      $("gb-list").replaceChildren(...docs.map((d, i) => renderEntry(d.data(), i)));
       observe($("gb-list"));
     },
     () => ($("gb-status").textContent = "Couldn't load the messages. Please refresh.")
@@ -226,7 +235,7 @@ if (!M.firebase) {
     return fullCache.get(id);
   };
   fs.onSnapshot(fs.query(photos, fs.orderBy("createdAt", "asc")), (snap) => {
-    shared = snap.docs.map((d) => {
+    shared = snap.docs.filter((d) => !hidden.photos.has(d.id)).map((d) => {
       const p = d.data();
       return { type: "image", src: p.thumb, wide: p.wide, caption: p.caption, by: p.name, fullId: d.id };
     });
